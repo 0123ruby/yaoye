@@ -317,21 +317,22 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .seasonbtn b { font-size: 56px; grid-row: auto; }
 .seasonbtn span { font-size: 23px; }
 .seasonbtn small { font-size: 15px; }
-#resultPanel .who { flex-direction: row; justify-content: center; gap: 40px; }
-#resultPanel .who img { width: 190px; height: 190px; }
+#resultPanel .who { flex-direction: row; justify-content: center; align-items: center; gap: 44px; }
+#resultPanel .who img { width: clamp(150px, 13vw, 230px); height: clamp(150px, 13vw, 230px); border: 6px solid #fff; box-shadow: 0 4px 14px rgba(60,50,40,.18); }
 #resultPanel .who > div { text-align: left; display: flex; flex-direction: column; gap: 6px; }
-#resultPanel #resultName { font-family: var(--font-display); font-size: 40px; font-weight: 700; margin: 0; }
-#resultPanel #resultRank { font-size: 26px; font-weight: 700; color: #5d4c40; margin: 0; }
-#resultPanel .sheet.res { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.28); padding-top: 22px; }
+#resultPanel #resultName { font-family: var(--font-display); font-size: clamp(40px, 3.6vw, 62px); font-weight: 700; margin: 0; }
+#resultPanel #resultRank { font-size: clamp(26px, 2.3vw, 40px); font-weight: 700; color: #5d4c40; margin: 0; }
+#resultPanel .sheet.res { width: min(860px, 72%); gap: 20px; background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.28); padding-top: 22px; }
 #startPanel:not(.welcome) .sheet, #seasonPanel .sheet { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.24); }
-.res-season { align-self: center; padding: 6px 22px; border-radius: 999px; background: var(--sc, #8aa07a); color: #fffdf4; font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: .08em; }
-.res-badge { align-self: center; position: relative; padding: 12px 40px; font-size: 34px; font-weight: 800; color: #6a4410; background: linear-gradient(#f8d66a, #eab43e); border-radius: 12px; box-shadow: 0 4px 0 #c88f22, 0 8px 18px rgba(200,140,30,.3); animation: wpop .7s .3s cubic-bezier(.2,.8,.3,1.4) both; }
+.res-season { align-self: center; padding: 6px 26px; border-radius: 999px; background: var(--sc, #8aa07a); color: #fffdf4; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 2vw, 34px); letter-spacing: .08em; }
+.res-badge { align-self: center; position: relative; padding: 14px 54px; font-size: clamp(40px, 3.8vw, 64px); font-weight: 800; color: #6a4410; background: linear-gradient(#f8d66a, #eab43e); border-radius: 12px; box-shadow: 0 4px 0 #c88f22, 0 8px 18px rgba(200,140,30,.3); animation: wpop .7s .3s cubic-bezier(.2,.8,.3,1.4) both; }
 .res-badge[hidden] { display: none; }
-.res-badge::before, .res-badge::after { content: ""; position: absolute; top: 14px; width: 28px; height: 100%; background: #d99a2e; z-index: -1; }
-.res-badge::before { left: -18px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
-.res-badge::after { right: -18px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
-#resultPanel .score span { font-size: 104px; }
-#resultPanel .bigbtn { font-size: 26px; padding: 18px 38px; min-width: 190px; border-radius: 18px; }
+.res-badge::before, .res-badge::after { content: ""; position: absolute; top: 18px; width: 40px; height: 100%; background: #d99a2e; z-index: -1; }
+.res-badge::before { left: -28px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
+.res-badge::after { right: -28px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
+#resultPanel .score span { font-size: clamp(110px, 10vw, 170px); }
+#resultPanel .score { font-size: clamp(26px, 2.2vw, 38px); }
+#resultPanel .bigbtn { font-size: clamp(26px, 2.2vw, 36px); padding: 18px 40px; min-width: 200px; border-radius: 18px; }
 .seasonbtn .sbest { font-style: normal; font-size: 15px; color: #a8603f; }
 .sheet .score span { font-size: 88px; }
 .btn.primary-solid { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -469,6 +470,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
         <div class="panel" id="resultPanel" hidden>
           <div class="sheet res">
             <div class="res-season" id="resultSeason">夏・抓螢火蟲</div>
+            <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <div class="who">
               <img id="resultPhoto" alt="玩家頭貼" width="96" height="96">
               <div>
@@ -476,7 +478,6 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
                 <p class="score"><span id="resultScore">0</span> 分</p>
               </div>
             </div>
-            <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <p class="lead" id="resultRank">第 1 名</p>
             <div class="row">
               <button class="bigbtn main" id="againBtn">再玩一次</button>
@@ -1443,10 +1444,10 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     if (!fwUntil) return;
     const k = Math.min(1, (now - fwStart) / 0.6, Math.max(0, (fwUntil + 2 - now) / 1.2));   // 天色暗一點，煙火才看得清楚
     if (now > fwUntil && k <= 0 && !fireworks.length && !fwRockets.length) { fwUntil = 0; return; }
-    sx.fillStyle = `rgba(16,20,56,${0.74 * Math.max(0, k)})`; sx.fillRect(0, 0, W, H);
+    sx.fillStyle = `rgba(40,48,86,${0.18 * Math.max(0, k)})`; sx.fillRect(0, 0, W, H);
     if (now < fwUntil && now >= fwNext) {
       fwNext = now + 0.45 + Math.random() * 0.35;
-      const left = Math.random() < 0.5, tx = left ? W * (0.07 + Math.random() * 0.17) : W * (0.76 + Math.random() * 0.17);   // 放在卡片兩旁，才不會被擋住
+      const left = Math.random() < 0.5, tx = left ? W * (0.08 + Math.random() * 0.06) : W * (0.86 + Math.random() * 0.08);   // 放在卡片兩旁，才不會被擋住
       fwRockets.push({ x: tx + (Math.random() - 0.5) * W * 0.04, y: H * 1.02, tx, ty: H * (0.14 + Math.random() * 0.3), t: 0, dur: 0.75 + Math.random() * 0.3, tr: [] });
       if (settings.sfx) tone(500, 1600, 0.6, 'sine', 0.025);
     }
