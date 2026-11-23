@@ -320,8 +320,16 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 #resultPanel .who { flex-direction: row; justify-content: center; gap: 40px; }
 #resultPanel .who img { width: 190px; height: 190px; }
 #resultPanel .who > div { text-align: left; display: flex; flex-direction: column; gap: 6px; }
-#resultPanel #resultName { font-family: var(--font-display); font-size: 32px; font-weight: 700; }
-#resultPanel #resultRank { font-size: 17px; color: #8c8178; }
+#resultPanel #resultName { font-family: var(--font-display); font-size: 40px; font-weight: 700; margin: 0; }
+#resultPanel #resultRank { font-size: 26px; font-weight: 700; color: #5d4c40; margin: 0; }
+#resultPanel .sheet.res { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.28); padding-top: 22px; }
+#startPanel:not(.welcome) .sheet, #seasonPanel .sheet { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.24); }
+.res-season { align-self: center; padding: 6px 22px; border-radius: 999px; background: var(--sc, #8aa07a); color: #fffdf4; font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: .08em; }
+.res-badge { align-self: center; position: relative; padding: 12px 40px; font-size: 34px; font-weight: 800; color: #6a4410; background: linear-gradient(#f8d66a, #eab43e); border-radius: 12px; box-shadow: 0 4px 0 #c88f22, 0 8px 18px rgba(200,140,30,.3); animation: wpop .7s .3s cubic-bezier(.2,.8,.3,1.4) both; }
+.res-badge[hidden] { display: none; }
+.res-badge::before, .res-badge::after { content: ""; position: absolute; top: 14px; width: 28px; height: 100%; background: #d99a2e; z-index: -1; }
+.res-badge::before { left: -18px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
+.res-badge::after { right: -18px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
 #resultPanel .score span { font-size: 104px; }
 #resultPanel .bigbtn { font-size: 26px; padding: 18px 38px; min-width: 190px; border-radius: 18px; }
 .seasonbtn .sbest { font-style: normal; font-size: 15px; color: #a8603f; }
@@ -459,15 +467,17 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
           </div>
         </div>
         <div class="panel" id="resultPanel" hidden>
-          <div class="sheet">
+          <div class="sheet res">
+            <div class="res-season" id="resultSeason">夏・抓螢火蟲</div>
             <div class="who">
               <img id="resultPhoto" alt="玩家頭貼" width="96" height="96">
               <div>
                 <p class="lead" id="resultName">長輩</p>
                 <p class="score"><span id="resultScore">0</span> 分</p>
-                <p class="lead" id="resultRank">第 1 名</p>
               </div>
             </div>
+            <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
+            <p class="lead" id="resultRank">第 1 名</p>
             <div class="row">
               <button class="bigbtn main" id="againBtn">再玩一次</button>
               <button class="bigbtn" id="otherSeasonBtn">換一季</button>
@@ -1485,7 +1495,8 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
   let wbgCache = null, wsStart = 0, wsParts = [];
   function wbgLayer() {
     if (wbgCache && wbgCache.w === W) return wbgCache;
-    const [o, c] = offscreen(), r = rng(2024);
+    let [o, c] = offscreen(); const r = rng(2024), parts = [];
+    const grp = (ax, ay, amp, ph) => { const [go, gc] = offscreen(); c = gc; parts.push({ cv: go, ax, ay, amp, ph }); };   // 每一叢植物畫在自己的圖層，之後可以各自輕輕搖
     const g = c.createRadialGradient(W * 0.5, H * 0.45, H * 0.05, W * 0.5, H * 0.5, W * 0.6); g.addColorStop(0, '#f3ecd8'); g.addColorStop(1, '#e2d5b4'); c.fillStyle = g; c.fillRect(0, 0, W, H);
     for (let k = 0; k < 18; k++) { c.fillStyle = k % 2 ? 'rgba(200,182,140,.25)' : 'rgba(255,250,235,.35)'; c.beginPath(); c.ellipse(r() * W, r() * H, W * (0.03 + r() * 0.06), H * (0.012 + r() * 0.02), 0, 0, Math.PI * 2); c.fill(); }
     for (let k = 0; k < 40; k++) disc(c, r() * W, H * (0.3 + r() * 0.5), 1.2 + r() * 1.6, 'rgba(150,130,100,.35)');   // 細沙
@@ -1501,10 +1512,11 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     }
     // 上面兩個角垂下來的大葉子
     const topL = [[-0.02, -0.04, 0.42, 2.5], [0.06, -0.06, 0.36, 2.9], [0.14, -0.05, 0.28, 3.3], [-0.04, 0.12, 0.34, 2.0], [0.22, -0.06, 0.22, 3.6]];
-    topL.forEach(([x, y, l, a], i) => { bigLeaf(c, W * x, H * y, H * l, a, G[i % G.length], V); bigLeaf(c, W * (1 - x), H * y, H * l, -a, G[(i + 2) % G.length], V); });
+    grp(0, 0, 0.014, 0); topL.forEach(([x, y, l, a], i) => bigLeaf(c, W * x, H * y, H * l, a, G[i % G.length], V));
+    grp(W, 0, 0.014, 1.7); topL.forEach(([x, y, l, a], i) => bigLeaf(c, W * (1 - x), H * y, H * l, -a, G[(i + 2) % G.length], V));
     // 左右兩邊的芋頭葉、大葉
-    taro(c, W * -0.02, H * 0.75, H * 0.42, 0.75, '#7aab7c', '#6a9a6e'); taro(c, W * 1.02, H * 0.72, H * 0.44, -0.8, '#6f9f74', '#5f8f66');
-    bigLeaf(c, W * 0.0, H * 0.55, H * 0.3, 1.25, '#98c470', V); bigLeaf(c, W * 1.0, H * 0.5, H * 0.3, -1.3, '#8fbf6a', V);
+    grp(0, H * 0.75, 0.02, 0.8); taro(c, W * -0.02, H * 0.75, H * 0.42, 0.75, '#7aab7c', '#6a9a6e'); bigLeaf(c, W * 0.0, H * 0.55, H * 0.3, 1.25, '#98c470', V);
+    grp(W, H * 0.72, 0.02, 2.6); taro(c, W * 1.02, H * 0.72, H * 0.44, -0.8, '#6f9f74', '#5f8f66'); bigLeaf(c, W * 1.0, H * 0.5, H * 0.3, -1.3, '#8fbf6a', V);
     const fern = (x, y, len, ang, col) => {   // 蕨類：一根彎彎的莖，兩邊一片片小羽葉
       c.save(); c.translate(x, y); c.rotate(ang); c.strokeStyle = dkReal(col, 0.8); c.lineWidth = Math.max(1.5, len * 0.012); c.lineCap = 'round';
       c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(len * 0.12, -len * 0.5, len * 0.05, -len); c.stroke();
@@ -1512,17 +1524,27 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
         for (const sd of [-1, 1]) { c.save(); c.translate(px, py); c.rotate(sd * 1.15 - 0.15); c.fillStyle = k % 2 ? col : lt(col, 0.1); c.beginPath(); c.ellipse(0, -l / 2, l * 0.26, l / 2, 0, 0, Math.PI * 2); c.fill(); c.restore(); } }
       c.restore();
     };
-    fern(W * 0.05, H * 1.02, H * 0.42, 0.35, '#7fb05c'); fern(W * 0.12, H * 1.04, H * 0.3, 0.6, '#98c470'); fern(W * 0.95, H * 1.02, H * 0.44, -0.4, '#7fb05c'); fern(W * 0.88, H * 1.04, H * 0.28, -0.7, '#98c470');
-    fern(W * 0.3, -H * 0.02, H * 0.26, 3.4, '#8fbf6a'); fern(W * 0.7, -H * 0.02, H * 0.24, -3.4, '#8fbf6a');
+    grp(W * 0.08, H, 0.03, 0.3); fern(W * 0.05, H * 1.02, H * 0.42, 0.35, '#7fb05c'); fern(W * 0.12, H * 1.04, H * 0.3, 0.6, '#98c470');
+    grp(W * 0.92, H, 0.03, 2.1); fern(W * 0.95, H * 1.02, H * 0.44, -0.4, '#7fb05c'); fern(W * 0.88, H * 1.04, H * 0.28, -0.7, '#98c470');
+    grp(W * 0.3, 0, 0.04, 1.1); fern(W * 0.3, -H * 0.02, H * 0.26, 3.4, '#8fbf6a');
+    grp(W * 0.7, 0, 0.04, 3.3); fern(W * 0.7, -H * 0.02, H * 0.24, -3.4, '#8fbf6a');
     // 下面一整片酢漿草和小草
+    grp(W * 0.5, H * 1.2, 0.004, 0.5);
     for (let k = 0; k < 4; k++) { clump(c, W * (0.04 + k * 0.31), H * 1.02, H * 0.14, 7, '#a9cf86', '#97c276'); }
     for (let k = 0; k < 46; k++) { const x = r() * W, y = H * (0.86 + r() * 0.16); if (Math.abs(x - W * 0.5) < W * 0.14 && y < H * 0.95) continue; clover(c, x, y, H * (0.022 + r() * 0.016)); }
     for (const [x, y] of [[0.36, 0.9], [0.66, 0.92], [0.9, 0.86]]) daisy(c, W * x, H * y, H * 0.008);
-    o.w = W; wbgCache = o; return o;
+    o.w = W; o.parts = parts; wbgCache = o; return o;
+  }
+  function wbgFlat() {   // 整張合起來（排行榜背景用）
+    const L = wbgLayer(), [o, c] = offscreen(); c.drawImage(L, 0, 0, W, H); for (const p of L.parts) c.drawImage(p.cv, 0, 0, W, H); return o;
   }
   function welcomeScene(t) {
     if (!wsStart) wsStart = t;
-    sx.drawImage(wbgLayer(), 0, 0, W, H);
+    const L = wbgLayer(); sx.drawImage(L, 0, 0, W, H);
+    for (const p of L.parts) {   // 植物以根部為中心，像被微風吹一樣輕輕擺
+      const a = reduceMotion ? 0 : Math.sin(t * 0.7 + p.ph) * p.amp + Math.sin(t * 1.9 + p.ph * 2) * p.amp * 0.25;
+      sx.save(); sx.translate(p.ax, p.ay); sx.rotate(a); sx.translate(-p.ax, -p.ay); sx.drawImage(p.cv, 0, 0, W, H); sx.restore();
+    }
     if (wsParts.length < 26) wsParts.push({ x: Math.random(), y: Math.random(), v: 0.006 + Math.random() * 0.01, ph: Math.random() * 6, r: 1.6 + Math.random() * 2.2 });
     for (const p of wsParts) {   // 空氣裡慢慢飄的小光點
       p.y -= p.v / 60; p.x += Math.sin(t * 0.6 + p.ph) * 0.0003; if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
@@ -1963,10 +1985,12 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
       const before = personBest(season, player.pid); addScore(season, lastEntry);
       const best = personBest(season, player.pid), r = personRank(season, player.pid);
       rankText = before === null ? `第一次玩${CHAR[season]}天，排第 ${r} 名` : score > before ? `新的個人最佳！排第 ${r} 名` : `個人最佳 ${best} 分，排第 ${r} 名`;
-      if (score >= best && r <= 8) { rankText = '🎉 進入排行榜！' + rankText; fwPending = true; }
+      if (score >= best && r <= 8) { fwPending = true; rankText = before === null ? `第一次玩${CHAR[season]}天就上榜，好厲害！` : score > before ? '刷新個人最佳，好厲害！' : `個人最佳 ${best} 分`; }   // 上方的金色布條已經寫名次，這裡不重複
       }
     }
-    el('resultPhoto').src = player.photo; el('resultName').textContent = `${player.name}・${CHAR[season]}・${LEVELS.find(l => l.key === season).name}`;
+    el('resultBadge').hidden = !fwPending; el('resultBadge').textContent = `🎉 進入排行榜！${CHAR[season]}天第 ${personRank(season, player.pid) || ''} 名`;
+    el('resultSeason').textContent = `${CHAR[season]}・${LEVELS.find(l => l.key === season).name}`; el('resultSeason').style.setProperty('--sc', SEASON_COLOR[season]);
+    el('resultPhoto').src = player.photo; el('resultName').textContent = player.name;
     el('resultScore').textContent = String(score); el('resultRank').textContent = rankText;
     lbTab = season; renderLeaderboard();
     startPhase('result');
@@ -2453,7 +2477,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     sx.setTransform(sdpr, 0, 0, sdpr, 0, 0);
     const sceneOff = phase === 'intro' || phase === 'trial' || (phase === 'play' && scenes[season].replayT > 0);
     if (phase === 'start' && !el('stepWelcome').hidden) welcomeScene(now);
-    else if (phase === 'start' || phase === 'select' || phase === 'result') { welcomeScene(now); sx.fillStyle = 'rgba(250,246,234,.5)'; sx.fillRect(0, 0, W, H); if (phase === 'result') drawFireworks(now, dt); }
+    else if (phase === 'start' || phase === 'select' || phase === 'result') { welcomeScene(now); sx.fillStyle = 'rgba(250,246,234,.35)'; sx.fillRect(0, 0, W, H); if (phase === 'result') drawFireworks(now, dt); }
     else if (sceneOff) plainBg(season, now); else SCENES[season](scenes[season], now, dt);
     finish();
     if (phase === 'intro') drawIntro(season, phaseT);
@@ -2479,7 +2503,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
   el('demo').addEventListener('click', () => { demoOn = !demoOn; el('demo').setAttribute('aria-pressed', String(demoOn)); demoPhase = ''; if (demoOn && phase === 'start') { seat = { x: target.x, y: target.y }; calibrate(false); estSm = null; beginPlayer(null, '示範', true); } });
   // 重新開始：身體回到中心、重新歸零，回到拍頭貼
   el('lbBtn').addEventListener('click', () => {
-    if (!el('lbDrawer').classList.contains('open')) { try { el('lbDrawer').style.backgroundImage = `linear-gradient(rgba(250,246,234,.55), rgba(250,246,234,.55)), url(${wbgLayer().toDataURL('image/jpeg', 0.85)})`; } catch (e) {} }
+    if (!el('lbDrawer').classList.contains('open')) { try { el('lbDrawer').style.backgroundImage = `linear-gradient(rgba(250,246,234,.55), rgba(250,246,234,.55)), url(${wbgFlat().toDataURL('image/jpeg', 0.85)})`; } catch (e) {} }
     renderLeaderboard(); el('lbDrawer').classList.toggle('open');
   });
   document.querySelector('.stage').appendChild(el('lbDrawer'));
