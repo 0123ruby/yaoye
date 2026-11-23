@@ -1138,15 +1138,15 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
       sx.fillStyle = '#e6e8e1'; for (let i = 0; i < 22; i++) { const x = r() * W, y = ((r() * H * 1.2 + off) % (H * 1.2)) - H * 0.1, w = 14 + r() * 30; sx.beginPath(); sx.ellipse(x, y, w, w * 0.45, r() * 3, 0, Math.PI * 2); sx.fill(); }
     }
     // 跳格子兩旁：石頭、枯葉、小樹枝、冒出雪的小草（跟著格子一起捲動）
-    for (let row = Math.floor(sc.cam) - 3; row <= Math.floor(sc.cam) + 3; row++) {
+    for (let row = Math.floor(sc.cam) - 5; row <= Math.floor(sc.cam) + 6; row++) {
       const r = rng(1000 + row * 37);
-      for (let k = 0; k < 5; k++) {
+      for (let k = 0; k < 6; k++) {
         const side = k % 2 ? 1 : -1, gx = side * (1.25 + r() * 1.1), z = row + r();
         const [x, y] = hopP(gx, z, sc.cam); if (y < -60 || y > H + 60) continue;
         const kind = r(), sz = H * (0.015 + r() * 0.018);
-        if (kind < 0.35) { sx.save(); sx.translate(x, y); sx.beginPath(); sx.ellipse(0, 0, sz * 1.3, sz * 0.95, r() * 3, 0, Math.PI * 2); sx.fillStyle = '#bcbfb6'; sx.fill(); sx.strokeStyle = TL; sx.lineWidth = 1.6; sx.stroke(); sx.beginPath(); sx.ellipse(-sz * 0.3, -sz * 0.35, sz * 0.6, sz * 0.3, -0.4, 0, Math.PI * 2); sx.fillStyle = '#fbf8ef'; sx.fill(); sx.restore(); }   // 頂上積一點雪的石頭
-        else if (kind < 0.7) { sx.save(); sx.translate(x, y); sx.rotate(r() * 6.28); const L = sz * 1.6; sx.beginPath(); sx.moveTo(-L, 0); sx.quadraticCurveTo(0, -L * 0.55, L, 0); sx.quadraticCurveTo(0, L * 0.55, -L, 0); sx.fillStyle = ['#c9a26a', '#b98a56', '#d6b47a'][Math.floor(r() * 3)]; sx.fill(); sx.strokeStyle = TL; sx.lineWidth = 1.4; sx.stroke(); sx.save(); sx.clip(); sx.beginPath(); sx.moveTo(-L * 0.9, 0); sx.lineTo(L * 0.85, 0); for (let q = -2; q <= 2; q++) { sx.moveTo(q * L * 0.3, 0); sx.lineTo(q * L * 0.3 + L * 0.2, -L * 0.22); sx.moveTo(q * L * 0.3, 0); sx.lineTo(q * L * 0.3 + L * 0.2, L * 0.22); } sx.strokeStyle = 'rgba(93,76,64,.5)'; sx.lineWidth = 1; sx.stroke(); sx.restore(); sx.restore(); }   // 枯葉
-        else if (kind < 0.85) { sx.save(); sx.translate(x, y); sx.rotate(r() * 6.28); sx.strokeStyle = TL; sx.lineCap = 'round'; sx.lineWidth = 5; sx.beginPath(); sx.moveTo(-sz * 1.8, 0); sx.lineTo(sz * 1.8, 0); sx.moveTo(0, 0); sx.lineTo(sz * 0.8, -sz * 0.8); sx.stroke(); sx.strokeStyle = '#8a6a50'; sx.lineWidth = 3; sx.stroke(); sx.restore(); }   // 小樹枝
+        if (kind < 0.3) { sx.save(); sx.translate(x, y); sx.beginPath(); sx.ellipse(0, 0, sz * 1.3, sz * 0.95, r() * 3, 0, Math.PI * 2); sx.fillStyle = '#bcbfb6'; sx.fill(); sx.strokeStyle = TL; sx.lineWidth = 1.6; sx.stroke(); sx.beginPath(); sx.ellipse(-sz * 0.3, -sz * 0.35, sz * 0.6, sz * 0.3, -0.4, 0, Math.PI * 2); sx.fillStyle = '#fbf8ef'; sx.fill(); sx.restore(); }   // 頂上積一點雪的石頭
+        else if (kind < 0.78) { sx.save(); sx.translate(x, y); sx.rotate(r() * 6.28); const L = sz * 1.6; sx.beginPath(); sx.moveTo(-L, 0); sx.quadraticCurveTo(0, -L * 0.55, L, 0); sx.quadraticCurveTo(0, L * 0.55, -L, 0); sx.fillStyle = ['#c9a26a', '#b98a56', '#d6b47a'][Math.floor(r() * 3)]; sx.fill(); sx.strokeStyle = TL; sx.lineWidth = 1.4; sx.stroke(); sx.save(); sx.clip(); sx.beginPath(); sx.moveTo(-L * 0.9, 0); sx.lineTo(L * 0.85, 0); for (let q = -2; q <= 2; q++) { sx.moveTo(q * L * 0.3, 0); sx.lineTo(q * L * 0.3 + L * 0.2, -L * 0.22); sx.moveTo(q * L * 0.3, 0); sx.lineTo(q * L * 0.3 + L * 0.2, L * 0.22); } sx.strokeStyle = 'rgba(93,76,64,.5)'; sx.lineWidth = 1; sx.stroke(); sx.restore(); sx.restore(); }   // 枯葉
+        else if (kind < 0.9) { sx.save(); sx.translate(x, y); sx.rotate(r() * 6.28); sx.strokeStyle = TL; sx.lineCap = 'round'; sx.lineWidth = 5; sx.beginPath(); sx.moveTo(-sz * 1.8, 0); sx.lineTo(sz * 1.8, 0); sx.moveTo(0, 0); sx.lineTo(sz * 0.8, -sz * 0.8); sx.stroke(); sx.strokeStyle = '#8a6a50'; sx.lineWidth = 3; sx.stroke(); sx.restore(); }   // 小樹枝
         else { for (let q = 0; q < 5; q++) { const a = -2.4 + q * 0.4; sx.beginPath(); sx.moveTo(x, y); sx.quadraticCurveTo(x + Math.cos(a) * sz * 0.6, y + Math.sin(a) * sz * 0.9, x + Math.cos(a) * sz * 1.1, y + Math.sin(a) * sz * 1.4); sx.strokeStyle = TL; sx.lineWidth = 3.4; sx.lineCap = 'round'; sx.stroke(); sx.strokeStyle = '#9fae7a'; sx.lineWidth = 2; sx.stroke(); } sx.beginPath(); sx.ellipse(x, y + 2, sz * 0.8, sz * 0.3, 0, 0, Math.PI * 2); sx.fillStyle = '#fbf8ef'; sx.fill(); }   // 雪裡冒出的小草
       }
     }
@@ -1416,7 +1416,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     cardTitle(key, k, tx, phase === 'play' ? '再看一次示範' : '步驟 1／3　看示範');
     sx.font = `700 ${Math.round(k.ch * 0.068)}px ${css('--font-body')}`; sx.fillStyle = TEXT;
     DEMO[key].forEach((line, i) => sx.fillText(line, tx, k.y + k.ch * (0.53 + i * 0.11), k.x + k.cw - tx - 16));
-    const p = Math.min(1, pt / INTRO_LEN);
+    const p = Math.min(1, pt / (phase === 'intro' ? introLen : INTRO_LEN));
     sx.fillStyle = 'rgba(79,70,64,.12)'; sx.beginPath(); sx.roundRect(tx, k.y + k.ch * 0.8, k.cw * 0.32, 8, 4); sx.fill();
     sx.fillStyle = ARROW; sx.beginPath(); sx.roundRect(tx, k.y + k.ch * 0.8, k.cw * 0.32 * p, 8, 4); sx.fill();
   }
@@ -1485,10 +1485,10 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     sx.fillStyle = 'rgba(79,70,64,.25)'; sx.fillRect(W / 2 - 1, by + bh * 0.22, 2, bh * 0.56);
     sx.fillStyle = TEXT; sx.font = `700 ${Math.round(bh * 0.5)}px ${css('--font-body')}`; sx.fillText(`${score} 分`, W / 2 + bw * 0.24, by + bh / 2 + 1);
   }
-  const INTRO_LEN = 2.0, GO_LEN = 3.6, TRIAL_MAX = 20, TRIAL_DONE_SHOW = 1.8, PLAY_LEN = 20;
+  let introLen = 2.0; const INTRO_LEN = 2.0, GO_LEN = 3.6, TRIAL_MAX = 20, TRIAL_DONE_SHOW = 1.8, PLAY_LEN = 20;
   const playLen = k => k === 'winter' ? 30 : PLAY_LEN;
   const playTotal = () => playLen(season) + ((scenes[season] && scenes[season].bonus) || 0);   // 比賽中按「再看一次示範」每次多 5 秒
-  const REPLAY_LEN = 4;   // 冬天每格要停 2 秒，比賽時間給 30 秒
+  const REPLAY_LEN = 9;   // 冬天每格要停 2 秒，比賽時間給 30 秒
 
   // =========================================================
   // 比賽流程：拍頭貼 → 選季節 → 示範 → 試玩 → 3、2、1 → 20 秒 → 成績
@@ -1545,7 +1545,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     sx.restore();
   }
   function startPhase(p) {
-    phase = p; phaseT = 0; swayLog = []; stableStart = null; lastSide = 0;
+    phase = p; phaseT = 0; if (p !== 'intro') introLen = INTRO_LEN; swayLog = []; stableStart = null; lastSide = 0;
     if (p === 'trial') { trial = { best: 0, left: 0, right: 0, done: false, msg: '', doneT: 0, reps: [], cur: 0, side: 0, need: 4 }; }
     if (p === 'select') renderSeasonButtons();
     if (p === 'intro') say(season);
@@ -1596,7 +1596,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     phaseT += dt;
     if (phase === 'start') return;
     if (phase === 'select') { if (demoOn && phaseT > 2) chooseSeason(LEVELS[demoSeasonIdx++ % 4].key); return; }
-    if (phase === 'intro') { if (phaseT >= INTRO_LEN) startPhase('trial'); return; }
+    if (phase === 'intro') { if (phaseT >= introLen) { introLen = INTRO_LEN; startPhase('trial'); } return; }
     if (phase === 'trial') { stepTrial(now, dt); return; }
     if (phase === 'go') { if (phaseT >= GO_LEN) startPhase('play'); return; }
     if (phase === 'result') { if (demoOn && phaseT > 4.5) startPhase('select'); return; }
@@ -1904,6 +1904,10 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
   const CUE = {
     spring: '春天，播種。身體往前傾，再坐回來', summer: '夏天，抓螢火蟲。身體往左、往右搖',
     autumn: '秋天，割稻。身體往後靠，再坐回來', winter: '冬天，跳格子。格子在哪邊，就往哪邊靠，停住兩秒',
+    how_spring: '春天播種的玩法：看到發亮的那一格，身體往前傾，再坐回來，就會插下一株秧苗。插越多，分數越高。',
+    how_summer: '夏天抓螢火蟲的玩法：身體往左、往右慢慢搖，網子會跟著移動，網子碰到螢火蟲就抓到了。',
+    how_autumn: '秋天割稻的玩法：身體往後靠，再坐回來，就會割下一叢稻子。割越多，分數越高。',
+    how_winter: '冬天跳格子的玩法：下一格在左邊就往左靠，在右邊就往右靠，在中間就坐正，停住兩秒，小朋友就會跳過去。',
     trial: '先試試看', three: '三', two: '二', one: '一', start: '開始', timeup: '時間到',
     forward: '往前傾', back: '往後靠', ret: '坐回來', sway: '左右搖', goleft: '往左', goright: '往右',
     left: '偏左', right: '偏右', center: '坐正', hold: '停住', home: '跳回起點', good: '很好',
@@ -1924,7 +1928,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     if (settings.voice === 'off' || !CUE[key]) return;
     if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; }
     if (settings.voice === 'tw') {
-      if (!twClips[key]) return;
+      if (!twClips[key]) { if (key.startsWith('how_') && twClips[key.slice(4)]) key = key.slice(4); else return; }
       curAudio = new Audio(twClips[key]); curAudio.play().catch(() => {}); return;
     }
     const text = CUE[key];
@@ -2393,8 +2397,8 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     stopDemo(); startPhase('select'); flashNote('換一個季節');
   });
   el('replay').addEventListener('click', () => {
-    if (phase === 'play') { const sc = scenes[season]; if (!(sc.replayT > 0)) { sc.replayT = REPLAY_LEN; say(season); } return; }   // 比賽中：暫停看示範，看完多 5 秒，分數保留
-    if (['intro', 'trial', 'go'].includes(phase)) { scenes[season] = newScene(season); startPhase('intro'); }
+    if (phase === 'play') { const sc = scenes[season]; if (!(sc.replayT > 0)) { sc.replayT = REPLAY_LEN; say('how_' + season); } return; }   // 比賽中：暫停看示範，看完多 5 秒，分數保留
+    if (['intro', 'trial', 'go'].includes(phase)) { scenes[season] = newScene(season); introLen = REPLAY_LEN; startPhase('intro'); say('how_' + season); }
   });
   function setEva(v) { eva = v; el('eva1').setAttribute('aria-pressed', String(v === 1)); el('eva2').setAttribute('aria-pressed', String(v === 2)); calibrate(true); }
   function setSensor(m) {
