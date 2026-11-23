@@ -172,7 +172,13 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .bigchoice small { font-size: 15px; font-weight: 400; color: #8c8178; }
 .bigchoice:hover { border-color: #5f7d78; }
 .bigchoice:disabled { opacity: .45; cursor: default; }
-#stepChoose[hidden], #stepPick[hidden], #stepWho[hidden] { display: none; }
+#stepWelcome[hidden], #stepChoose[hidden], #stepPick[hidden], #stepWho[hidden] { display: none; }
+#stepWelcome { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+.welcome-hi { margin: 0; font-family: var(--font-display); font-size: 34px; font-weight: 700; color: #b5674f; }
+.wseasons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.wseasons span { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 16px; color: #6b6058; }
+.wseasons b { width: 64px; height: 64px; border-radius: 50%; background: var(--c); color: #fbf8ef; display: grid; place-items: center; font-family: var(--font-display); font-size: 30px; }
+.bigbtn.welcome-go { font-size: 30px; padding: 18px 72px; }
 #stepWho { display: flex; flex-direction: column; gap: 12px; }
 .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; max-height: 300px; overflow: auto; padding: 2px; }
 .pgrid .pchip { width: auto; }
@@ -324,12 +330,24 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
         <div class="panel" id="startPanel">
           <div class="sheet">
             <h3>搖曳時光</h3>
-            <div id="stepChoose">
+            <div id="stepWelcome">
+              <p class="welcome-hi">歡迎來玩！</p>
+              <p class="lead">坐在坐墊上，身體輕輕搖一搖，<br>就能一起走過春、夏、秋、冬。</p>
+              <div class="wseasons">
+                <span style="--c:#8aa07a"><b>春</b>播種</span>
+                <span style="--c:#7d86a3"><b>夏</b>抓螢火蟲</span>
+                <span style="--c:#c4a06a"><b>秋</b>割稻</span>
+                <span style="--c:#b9806a"><b>冬</b>跳格子</span>
+              </div>
+              <button class="bigbtn main welcome-go" id="welcomeGo">開始玩</button>
+            </div>
+            <div id="stepChoose" hidden>
               <p class="lead">是新來的長輩，還是玩過的？</p>
               <div class="choose">
                 <button class="bigchoice" id="chooseNew"><b>＋</b>新的長輩<small>拍頭貼、填暱稱</small></button>
                 <button class="bigchoice" id="chooseOld"><b id="chooseOldIco">☺</b>玩過的長輩<small id="chooseOldSub">點自己的頭像</small></button>
               </div>
+              <div class="row"><button class="bigbtn" id="chooseBack">← 返回</button></div>
             </div>
             <div id="stepPick" hidden>
               <p class="lead">點自己的頭像：</p>
@@ -1553,7 +1571,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     if (p === 'go' && recBuf && trial && trial.reps) recBuf.reps = trial.reps.map(v => +v.toFixed(2));
     if (p === 'play' && !recBuf) { recBuf = { frames: [], reps: [] }; recT = 0; }
     if (p === 'select' || p === 'start') recBuf = null;
-    if (p === 'start') { el('seatWarn').hidden = true; el('startRow').hidden = false; selectPlayer(null); showStep('choose'); } else camStop();
+    if (p === 'start') { el('seatWarn').hidden = true; el('startRow').hidden = false; selectPlayer(null); showStep('welcome'); } else camStop();
   }
   const fit = v => Math.max(MIN_TH, Math.min(SENS[sensor].max, v * 0.7));
   function stepTrial(now, dt) {
@@ -1657,7 +1675,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     }
   }
   function showStep(k) {
-    el('stepChoose').hidden = k !== 'choose'; el('stepPick').hidden = k !== 'pick'; el('stepWho').hidden = k !== 'who';
+    el('stepWelcome').hidden = k !== 'welcome'; el('stepChoose').hidden = k !== 'choose'; el('stepPick').hidden = k !== 'pick'; el('stepWho').hidden = k !== 'who';
     if (k !== 'who') camStop();
   }
   function selectPlayer(id) {
@@ -2132,6 +2150,8 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
   el('chooseNew').addEventListener('click', () => { selectPlayer(null); showStep('who'); });
   el('chooseOld').addEventListener('click', () => { renderPlayers(); showStep('pick'); });
   el('pickBack').addEventListener('click', () => showStep('choose'));
+  el('welcomeGo').addEventListener('click', () => { stopDemo(); showStep('choose'); });
+  el('chooseBack').addEventListener('click', () => showStep('welcome'));
   el('whoBack').addEventListener('click', () => { el('seatWarn').hidden = true; el('startRow').hidden = false; selectPlayer(null); showStep('choose'); });
   el('againBtn').addEventListener('click', () => { stopDemo(); chooseSeason(season, true); });
   el('otherSeasonBtn').addEventListener('click', () => { stopDemo(); startPhase('select'); });
