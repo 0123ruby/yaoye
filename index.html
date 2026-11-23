@@ -92,12 +92,14 @@ body.fs .stage { width: min(100vw, 100vh * 16 / 9); border-radius: 0; }
 .icobtn[data-tip]:hover::after, .icobtn[data-tip]:focus-visible::after { content: attr(data-tip); position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%); white-space: nowrap; background: rgba(42,39,36,.88); color: #fff; font-size: 16px; padding: 5px 12px; border-radius: 8px; pointer-events: none; z-index: 10; }
 .icobtn:disabled:hover::after { content: attr(data-tip) "（遊戲中才能用）"; }
 /* 排行榜：從左邊滑出 */
-.lbdrawer { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 3vh 3vw; background: #efe6cf center / cover no-repeat; opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s; }
+.lbdrawer { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; padding: 2.5% 3% 2.5% 110px; background: #efe6cf center / cover no-repeat; opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s; }
 .lbdrawer.open { opacity: 1; visibility: visible; }
-.lbbox { width: min(820px, 96vw); max-height: 94vh; overflow: auto; background: rgba(250,246,234,.94); border: 4px solid #fbf8ef; border-radius: 30px; box-shadow: 0 14px 40px rgba(60,80,40,.22); padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 10px; transform: translateY(24px) scale(.92); transition: transform .35s cubic-bezier(.2,.8,.3,1.2); }
+.lbbox { position: relative; width: min(820px, 100%); max-height: 100%; overflow: auto; background: rgba(250,246,234,.94); border: 4px solid #fbf8ef; border-radius: 30px; box-shadow: 0 14px 40px rgba(60,80,40,.22); padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 10px; transform: translateY(24px) scale(.92); transition: transform .35s cubic-bezier(.2,.8,.3,1.2); }
 .lbdrawer.open .lbbox { transform: none; }
 .lbbox .card { box-shadow: none; background: transparent; padding: 0; border: 0; }
-.lbbox .card h2 { font-family: var(--font-display); font-size: 32px; display: block; text-align: center; margin: -36px 0 6px; }
+.lbbox .card h2 { font-family: var(--font-display); font-size: 32px; display: block; text-align: center; margin: 0 0 6px; }
+.lbx { position: absolute; top: 14px; right: 14px; z-index: 3; width: 56px; height: 56px; border-radius: 50%; border: 0; background: #5f7d78; color: #fff; font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,.18); }
+.lbx:hover { background: #4d6964; transform: scale(1.06); }
 .lbbox .card h2 small { display: block; font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--muted); }
 .lbbox .lb-tabs { justify-content: center; }
 .lbbox .lb-tabs button { font-size: 18px; padding: 6px 18px; }
@@ -481,7 +483,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 </main>
 <aside class="lbdrawer" id="lbDrawer" aria-label="排行榜">
   <div class="lbbox">
-  <div class="drawer-head" style="justify-content:flex-end"><button class="btn" id="lbClose">關閉</button></div>
+  <button class="lbx" id="lbClose" aria-label="關閉排行榜">✕</button>
     <section class="card" aria-label="排行榜">
       <h2>🏆 排行榜 <small>存在這台電腦的瀏覽器裡，不會上傳</small></h2>
       <div class="lb-tabs one" id="lbTabs"></div>
@@ -2451,7 +2453,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     sx.setTransform(sdpr, 0, 0, sdpr, 0, 0);
     const sceneOff = phase === 'intro' || phase === 'trial' || (phase === 'play' && scenes[season].replayT > 0);
     if (phase === 'start' && !el('stepWelcome').hidden) welcomeScene(now);
-    else if (phase === 'start' || phase === 'select' || phase === 'result') { homeBg(now); if (phase === 'result') drawFireworks(now, dt); }
+    else if (phase === 'start' || phase === 'select' || phase === 'result') { welcomeScene(now); sx.fillStyle = 'rgba(250,246,234,.5)'; sx.fillRect(0, 0, W, H); if (phase === 'result') drawFireworks(now, dt); }
     else if (sceneOff) plainBg(season, now); else SCENES[season](scenes[season], now, dt);
     finish();
     if (phase === 'intro') drawIntro(season, phaseT);
@@ -2477,9 +2479,10 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
   el('demo').addEventListener('click', () => { demoOn = !demoOn; el('demo').setAttribute('aria-pressed', String(demoOn)); demoPhase = ''; if (demoOn && phase === 'start') { seat = { x: target.x, y: target.y }; calibrate(false); estSm = null; beginPlayer(null, '示範', true); } });
   // 重新開始：身體回到中心、重新歸零，回到拍頭貼
   el('lbBtn').addEventListener('click', () => {
-    if (!el('lbDrawer').classList.contains('open')) { try { el('lbDrawer').style.backgroundImage = `url(${wbgLayer().toDataURL('image/jpeg', 0.85)})`; } catch (e) {} }
+    if (!el('lbDrawer').classList.contains('open')) { try { el('lbDrawer').style.backgroundImage = `linear-gradient(rgba(250,246,234,.55), rgba(250,246,234,.55)), url(${wbgLayer().toDataURL('image/jpeg', 0.85)})`; } catch (e) {} }
     renderLeaderboard(); el('lbDrawer').classList.toggle('open');
   });
+  document.querySelector('.stage').appendChild(el('lbDrawer'));
   el('lbClose').addEventListener('click', () => el('lbDrawer').classList.remove('open'));
   el('lbDrawer').addEventListener('click', e => { if (e.target === el('lbDrawer')) el('lbDrawer').classList.remove('open'); });   // 點旁邊暗暗的地方也能關
   el('dataBtn').addEventListener('click', () => el('drawer').classList.contains('open') ? closeDrawer() : openDrawer());
