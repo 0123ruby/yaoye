@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&text=%E6%90%96%E6%9B%B3%E6%99%82%E5%85%89&display=swap" rel="stylesheet">
 <style>
 /* 版面：左邊坐墊俯視圖與序列埠，右邊是四季平面插畫與判斷狀態 */
 :root {
@@ -180,12 +181,16 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 #startPanel.welcome .sheet { background: none; box-shadow: none; width: 100%; height: 100%; max-width: none; border-radius: 0; padding: 3.5% 4% 3.5%; }
 #startPanel.welcome .sheet > h3 { display: none; }
 .whello { margin: 0; font-size: 20px; letter-spacing: .5em; color: #b5674f; font-weight: 700; animation: wfade 1s ease both; }
-.wtitle { font-family: var(--font-display); font-weight: 700; font-size: clamp(48px, 7.5vw, 92px); color: #5d4c40; line-height: 1.05; display: flex; gap: .1em; text-shadow: 0 2px 0 rgba(251,248,239,.9), 0 0 18px rgba(251,248,239,.8); }
-.wtitle span { display: inline-block; transform-origin: 50% 90%; animation: wrise .9s cubic-bezier(.2,.8,.3,1.2) both, wsway 3.6s ease-in-out infinite; }
-.wtitle span:nth-child(1) { animation-delay: .15s, 1.1s; }
-.wtitle span:nth-child(2) { animation-delay: .3s, 1.5s; }
-.wtitle span:nth-child(3) { animation-delay: .45s, 1.9s; }
-.wtitle span:nth-child(4) { animation-delay: .6s, 2.3s; }
+.wtitle { font-family: "M PLUS Rounded 1c", "Noto Sans TC", sans-serif; font-weight: 800; font-size: clamp(64px, 10vw, 124px); line-height: 1; display: flex; gap: .06em; margin-top: 2%; }
+.wtitle span { position: relative; display: inline-block; padding-bottom: .16em; animation: wrise .9s cubic-bezier(.2,.8,.3,1.2) both; }
+.wtitle span::before { content: ""; position: absolute; left: 4%; right: 4%; bottom: 0; height: .3em; border-radius: 50%; background: #c8dd8e; border: .05em solid #fbf8ef; box-shadow: 0 .04em 0 rgba(93,76,64,.18); }
+.wtitle i { position: relative; display: inline-block; font-style: normal; color: #4f5a49; transform-origin: 50% 95%;
+  text-shadow: .06em 0 #fbf8ef, -.06em 0 #fbf8ef, 0 .06em #fbf8ef, 0 -.06em #fbf8ef, .045em .045em #fbf8ef, -.045em .045em #fbf8ef, .045em -.045em #fbf8ef, -.045em -.045em #fbf8ef, .03em .065em #fbf8ef, -.03em .065em #fbf8ef, .065em .03em #fbf8ef, -.065em .03em #fbf8ef, 0 .1em 0 rgba(93,76,64,.18);
+  animation: wsway 3.6s ease-in-out infinite; }
+.wtitle span:nth-child(1) { animation-delay: .1s; } .wtitle span:nth-child(1) i { animation-delay: 1s; }
+.wtitle span:nth-child(2) { animation-delay: .25s; } .wtitle span:nth-child(2) i { animation-delay: 1.4s; }
+.wtitle span:nth-child(3) { animation-delay: .4s; } .wtitle span:nth-child(3) i { animation-delay: 1.8s; }
+.wtitle span:nth-child(4) { animation-delay: .55s; } .wtitle span:nth-child(4) i { animation-delay: 2.2s; }
 .wwave { width: min(320px, 70%); height: 24px; }
 .wwave path { stroke-dasharray: 360; stroke-dashoffset: 360; animation: wdraw 1.6s .9s ease forwards, wwave 4s 2.5s ease-in-out infinite; }
 .wlead { margin: 0; font-size: 20px; color: #5d4c40; background: rgba(251,248,239,.78); padding: 6px 18px; border-radius: 999px; animation: wfade 1s 1.1s ease both; }
@@ -353,12 +358,9 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
             <h3>搖曳時光</h3>
             <div id="stepWelcome">
               <div class="wtop">
-              <p class="whello">歡 迎 來 玩</p>
-              <div class="wtitle" aria-label="搖曳時光"><span>搖</span><span>曳</span><span>時</span><span>光</span></div>
-              <svg class="wwave" viewBox="0 0 320 24" aria-hidden="true"><path d="M4 12 C 44 0, 76 24, 116 12 S 188 0, 228 12 S 296 24, 316 12" fill="none" stroke="#c9a98a" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <div class="wtitle" aria-label="搖曳時光"><span><i>搖</i></span><span><i>曳</i></span><span><i>時</i></span><span><i>光</i></span></div>
               </div>
               <div class="wbottom">
-              <p class="wlead">坐在坐墊上，輕輕搖一搖，陪您走過春、夏、秋、冬</p>
               <button class="bigbtn main welcome-go" id="welcomeGo">開始玩</button>
               </div>
             </div>
@@ -1493,16 +1495,10 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
     }
     sx.globalAlpha = 1;
     // 長輩坐在坐墊上，做這一季的動作
-    const u = H * 0.095, fx = W * 0.5, fy = H * 0.53, pk = fade > 0.5 ? WS[nx].key : cur.key;
+    const u = H * 0.095, fx = W * 0.5, fy = H * 0.56, pk = fade > 0.5 ? WS[nx].key : cur.key;
     sx.fillStyle = 'rgba(93,76,64,.13)'; sx.beginPath(); sx.ellipse(fx, fy + 1.32 * u, 1.4 * u, 0.16 * u, 0, 0, Math.PI * 2); sx.fill();
     const fa = fade > 0 ? Math.abs(fade - 0.5) * 2 : 1;   // 換季時人偶淡出淡入
     sx.globalAlpha = 0.25 + 0.75 * fa; elder(sx, fx, fy, u, poseFor(pk, e * 0.9), e); sx.globalAlpha = 1;
-    // 季節名稱
-    const lab = fade > 0.5 ? WS[nx] : cur, la = fade > 0 ? fa : Math.min(1, f * 8);
-    sx.globalAlpha = la; sx.font = `700 ${Math.round(H * 0.04)}px ${css('--font-display')}`; sx.textAlign = 'center'; sx.textBaseline = 'middle';
-    const tw = sx.measureText(lab.name).width + H * 0.05;
-    sx.fillStyle = lab.col; sx.beginPath(); sx.roundRect(fx - tw / 2, fy + 1.55 * u, tw, H * 0.058, H * 0.029); sx.fill();
-    sx.fillStyle = '#fbf8ef'; sx.fillText(lab.name, fx, fy + 1.55 * u + H * 0.029); sx.globalAlpha = 1;
   }
   function plainBg(key, t) {
     const [a, b] = PLAIN[key]; sx.fillStyle = a; sx.fillRect(0, 0, W, H);
