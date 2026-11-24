@@ -326,8 +326,8 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 #resultPanel .sheet.res { width: min(860px, 72%); gap: 20px; background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.28); padding-top: 22px; }
 #startPanel:not(.welcome) .sheet, #seasonPanel .sheet { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.24); }
 .res-season { align-self: center; padding: 6px 26px; border-radius: 999px; background: var(--sc, #8aa07a); color: #fffdf4; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 2vw, 34px); letter-spacing: .08em; }
-.res-badge { align-self: center; position: relative; padding: 14px 44px; white-space: nowrap; font-size: clamp(32px, 2.9vw, 50px); font-weight: 800; color: #6a4410; background: linear-gradient(#f8d66a, #eab43e); border-radius: 12px; box-shadow: 0 4px 0 #c88f22, 0 8px 18px rgba(200,140,30,.3); animation: wpop .7s .3s cubic-bezier(.2,.8,.3,1.4) both; }
-.res-badge[hidden] { display: none; }
+.res-badge { align-self: center; position: relative; margin: 6px 0 14px; padding: 14px 44px; white-space: nowrap; font-size: clamp(32px, 2.9vw, 50px); font-weight: 800; color: #6a4410; background: linear-gradient(#f8d66a, #eab43e); border-radius: 12px; box-shadow: 0 4px 0 #c88f22, 0 8px 18px rgba(200,140,30,.3); animation: wpop .7s .3s cubic-bezier(.2,.8,.3,1.4) both; }
+.res-badge[hidden], #resultRank[hidden] { display: none; }
 .res-badge::before, .res-badge::after { content: ""; position: absolute; top: 18px; width: 40px; height: 100%; background: #d99a2e; z-index: -1; }
 .res-badge::before { left: -28px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
 .res-badge::after { right: -28px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
@@ -471,7 +471,6 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
         <div class="panel" id="resultPanel" hidden>
           <div class="sheet res">
             <div class="res-season" id="resultSeason">夏・抓螢火蟲</div>
-            <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <div class="who">
               <div class="res-me">
                 <img id="resultPhoto" alt="玩家頭貼" width="96" height="96">
@@ -479,6 +478,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
               </div>
               <p class="score"><span id="resultScore">0</span> 分</p>
             </div>
+            <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <p class="lead" id="resultRank">第 1 名</p>
             <div class="row">
               <button class="bigbtn main" id="againBtn">再玩一次</button>
@@ -1986,14 +1986,14 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
       else {
       const before = personBest(season, player.pid); addScore(season, lastEntry);
       const best = personBest(season, player.pid), r = personRank(season, player.pid);
-      rankText = before === null ? `第一次玩${CHAR[season]}天，排第 ${r} 名` : score > before ? `新的個人最佳！排第 ${r} 名` : `個人最佳 ${best} 分，排第 ${r} 名`;
-      if (score >= best && r <= 8) { fwPending = true; rankText = before === null ? `第一次玩${CHAR[season]}天就上榜，好厲害！` : score > before ? '刷新個人最佳，好厲害！' : `個人最佳 ${best} 分`; }   // 上方的金色布條已經寫名次，這裡不重複
+      rankText = before === null ? `第一次玩${CHAR[season]}天，做得很好！下次再挑戰排行榜！` : score > before ? `比上次更厲害了！個人最佳 ${best} 分` : `個人最佳 ${best} 分，多玩幾次一定會更好！`;   // 沒上榜：給鼓勵的話
+      if (score >= best && r <= 8) { fwPending = true; rankText = ''; }   // 上榜：只顯示金色布條
       }
     }
     el('resultBadge').hidden = !fwPending; el('resultBadge').textContent = `🎉 進入排行榜！${CHAR[season]}天第 ${personRank(season, player.pid) || ''} 名`;
     el('resultSeason').textContent = `${CHAR[season]}・${LEVELS.find(l => l.key === season).name}`; el('resultSeason').style.setProperty('--sc', SEASON_COLOR[season]);
     el('resultPhoto').src = player.photo; el('resultName').textContent = player.name;
-    el('resultScore').textContent = String(score); el('resultRank').textContent = rankText;
+    el('resultScore').textContent = String(score); el('resultRank').textContent = rankText; el('resultRank').hidden = !rankText;
     lbTab = season; renderLeaderboard();
     startPhase('result');
     if (fwPending) { startFireworks(performance.now() / 1000); fwPending = false; }
