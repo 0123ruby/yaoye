@@ -271,13 +271,13 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .bigbtn { font: inherit; font-size: 18px; padding: 10px 18px; border-radius: 12px; border: 1px solid #cfc6b8; background: #fff; color: #4f4640; cursor: pointer; }
 .bigbtn.main { background: #5f7d78; border-color: #5f7d78; color: #fff; }
 .bigbtn { transition: background .15s, color .15s, border-color .15s, transform .15s; }
-.bigbtn:not(:disabled):hover { background: #e6efe9; border-color: #5f7d78; color: #3f5a55; transform: translateY(-2px); }
-.bigbtn.main:not(:disabled):hover { background: #46625d; border-color: #46625d; color: #fff; }
+.bigbtn:not(:disabled):hover { background: #5f7d78; border-color: #5f7d78; color: #fff; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(60,90,80,.25); }
+.bigbtn.main:not(:disabled):hover { background: #3c5651; border-color: #3c5651; color: #fff; }
 .btn:not(:disabled):hover { background: #e6efe9; color: #3f5a55; }
 .bigchoice:hover { background: #eef5f0; }
 .pchip:hover { background: #eef5f0; border-color: #9fb8b2; }
 .lb-tabs button:not([aria-pressed="true"]):hover { background: #e6efe9; border-color: #5f7d78; }
-.seasonbtn:hover { filter: brightness(1.04); box-shadow: 0 0 0 4px #5f7d78; }
+
 .camwrap { position: relative; width: 128px; height: 128px; flex: none; border-radius: 50%; overflow: hidden; background: #e8e1d6; }
 .camwrap video, .camwrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .camwrap video { transform: scaleX(-1); }
@@ -296,7 +296,8 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .seasonbtn b { font-family: var(--font-display); font-size: 40px; line-height: 1; grid-row: span 2; }
 .seasonbtn span { font-size: 18px; font-weight: 500; }
 .seasonbtn small { font-size: 14px; color: #8c8178; }
-.seasonbtn:hover { background: #fbf8f2; }
+.seasonbtn { transition: transform .18s, background .18s, box-shadow .18s; }
+.seasonbtn:hover { background: color-mix(in srgb, var(--c) 22%, #fff); transform: translateY(-5px) scale(1.03); box-shadow: 0 0 0 4px var(--c), 0 12px 24px rgba(60,50,40,.2); }
 /* ---- 重新排版：卡片置中、字和按鈕放大、頭像放大 ---- */
 .sheet { width: min(680px, 94%); padding: 28px 34px; gap: 18px; align-items: center; text-align: center; border-radius: 24px; box-shadow: 0 10px 34px rgba(60,50,40,.16); }
 .sheet.wide { width: min(840px, 94%); }
@@ -489,7 +490,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
             <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <p class="lead" id="resultRank">第 1 名</p>
             <div class="row">
-              <button class="bigbtn main" id="againBtn">再玩一次</button>
+              <button class="bigbtn" id="againBtn">再玩一次</button>
               <button class="bigbtn" id="otherSeasonBtn">換一季</button>
               <button class="bigbtn" id="nextPlayerBtn">換下一位</button>
             </div>
