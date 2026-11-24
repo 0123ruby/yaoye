@@ -317,10 +317,11 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .seasonbtn b { font-size: 56px; grid-row: auto; }
 .seasonbtn span { font-size: 23px; }
 .seasonbtn small { font-size: 15px; }
-#resultPanel .who { flex-direction: row; justify-content: center; align-items: center; gap: 44px; }
+#resultPanel .who { flex-direction: row; justify-content: center; align-items: center; gap: clamp(50px, 6vw, 110px); }
 #resultPanel .who img { width: clamp(150px, 13vw, 230px); height: clamp(150px, 13vw, 230px); border: 6px solid #fff; box-shadow: 0 4px 14px rgba(60,50,40,.18); }
-#resultPanel .who > div { text-align: left; display: flex; flex-direction: column; gap: 6px; }
-#resultPanel #resultName { font-family: var(--font-display); font-size: clamp(40px, 3.6vw, 62px); font-weight: 700; margin: 0; }
+#resultPanel .who > .res-me { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+#resultPanel .who .score { margin: 0; line-height: 1; }
+#resultPanel #resultName { font-family: var(--font-display); font-size: clamp(34px, 3vw, 50px); text-align: center; font-weight: 700; margin: 0; }
 #resultPanel #resultRank { font-size: clamp(26px, 2.3vw, 40px); font-weight: 700; color: #5d4c40; margin: 0; }
 #resultPanel .sheet.res { width: min(860px, 72%); gap: 20px; background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.28); padding-top: 22px; }
 #startPanel:not(.welcome) .sheet, #seasonPanel .sheet { background: #fffdf7; border: 5px solid #fff; box-shadow: 0 0 0 2px #dccfb2, 0 18px 44px rgba(70,90,50,.24); }
@@ -330,7 +331,7 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
 .res-badge::before, .res-badge::after { content: ""; position: absolute; top: 18px; width: 40px; height: 100%; background: #d99a2e; z-index: -1; }
 .res-badge::before { left: -28px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
 .res-badge::after { right: -28px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
-#resultPanel .score span { font-size: clamp(110px, 10vw, 170px); }
+#resultPanel .score span { font-size: clamp(150px, 14vw, 240px); }
 #resultPanel .score { font-size: clamp(26px, 2.2vw, 38px); }
 #resultPanel .bigbtn { font-size: clamp(26px, 2.2vw, 36px); padding: 18px 0; width: clamp(200px, 15vw, 250px); min-width: 0; flex: 0 0 auto; white-space: nowrap; border-radius: 18px; }
 .seasonbtn .sbest { font-style: normal; font-size: 15px; color: #a8603f; }
@@ -472,11 +473,11 @@ pre#serial { margin: 0; background: #1b1d1c; color: #c6dccb; font-family: var(--
             <div class="res-season" id="resultSeason">夏・抓螢火蟲</div>
             <div class="res-badge" id="resultBadge" hidden>🎉 進入排行榜！</div>
             <div class="who">
-              <img id="resultPhoto" alt="玩家頭貼" width="96" height="96">
-              <div>
+              <div class="res-me">
+                <img id="resultPhoto" alt="玩家頭貼" width="96" height="96">
                 <p class="lead" id="resultName">長輩</p>
-                <p class="score"><span id="resultScore">0</span> 分</p>
               </div>
+              <p class="score"><span id="resultScore">0</span> 分</p>
             </div>
             <p class="lead" id="resultRank">第 1 名</p>
             <div class="row">
